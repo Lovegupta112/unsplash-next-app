@@ -1,0 +1,9 @@
+.container{
+    min-height: 100vh;
+    border: 1px solid rgb(0, 0, 0);
+}
+
+.link {
+    width: fit-content;
+    margin:1rem auto;
+}

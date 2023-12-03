@@ -1,0 +1,9 @@
+.main {
+  min-height: calc(100vh - 15vh);
+  position: relative;
+  top: 15vh;
+}
+
+.image {
+  border-radius: 10px;
+}
