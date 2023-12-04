@@ -11,12 +11,14 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { useAtom } from "jotai";
 import { postAtom } from "@/pages/posts";
+import { useSession } from "next-auth/react";
 
 type PostType = {
   postId: string;
+  userEmail: string;
   title: string;
   tags: string[];
   img: File | undefined;
@@ -24,6 +26,7 @@ type PostType = {
 
 const defaultPost = {
   postId: "",
+  userEmail: "",
   title: "",
   tags: [""],
   img: undefined,
@@ -33,7 +36,8 @@ export default function AddPost() {
   const [open, setOpen] = useState(false);
   const [post, setPost] = useState<PostType>(defaultPost);
   const [postList, setPostList] = useAtom(postAtom);
-
+  const { data, status } = useSession();
+  // console.log('session: ',data,status);
   // const router=useRouter();
 
   const handleClickOpen = () => {
@@ -76,18 +80,29 @@ export default function AddPost() {
     try {
       const postId = v4();
       const imageUrl = await uploadImage();
+
+      if (status === "authenticated") {
+        console.log(data.user?.email);
+        setPost({ ...post, userEmail: data.user?.email || "" });
+      }
+
       setPost({ ...post, postId });
       setPostList([...postList, { ...post, postId, img: imageUrl || "" }]);
 
       const response = await fetch("/api/posts", {
         method: "POST",
-        body: JSON.stringify({ ...post, postId, img: imageUrl }),
+        body: JSON.stringify({
+          ...post,
+          postId,
+          img: imageUrl,
+          userEmail: data?.user?.email,
+        }),
         headers: {
           "Content-Type": "application/json",
         },
       });
-      const data = await response.json();
-      // console.log("created: ", data);
+      const createdData = await response.json();
+      // console.log("created: ", createdData);
       alert("Created");
       setOpen(false);
       // router.replace(router.asPath);

@@ -1,43 +1,38 @@
+import { atom, useAtomValue, useAtom } from "jotai";
+import { useEffect } from "react";
+import { postAtom } from "./index";
 import { Box, Stack } from "@mui/material";
-import { GetServerSideProps } from "next";
-import Link from "next/link";
 import styles from "@/styles/Post.module.css";
 import Post from "@/component/Post";
+import { GetServerSideProps } from "next";
 import { PostType } from "@/types/post";
-import { useEffect } from "react";
-import { atom, useAtom, useAtomValue } from "jotai";
 import { useRouter } from "next/router";
-// import { Suspense } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { inputAtom } from "@/component/Header";
 
-export const postAtom = atom([
-  {
-    postId: "",
-    userEmail: "",
-    title: "",
-    tags: [""],
-    img: "",
-  },
-]);
+export const userEmailAtom = atom("");
 
-const Posts = (props: { posts: PostType[] }) => {
+const UserPost = (props: { posts: PostType[] }) => {
+  // const posts=useAtomValue(postAtom);
+  // console.log('posts: ',posts);
+
   const { posts } = props;
-
   const [postList, setPostList] = useAtom(postAtom);
+  const userEmailValue = useAtomValue(userEmailAtom);
   const inputValue = useAtomValue(inputAtom);
-
-  const session = useSession();
+  const { data, status } = useSession();
   const router = useRouter();
 
-  if (session.status === "unauthenticated") {
-    router.replace("/");
-  }
-
   useEffect(() => {
-    setPostList(posts);
-  }, []);
+    if (status === "unauthenticated") {
+      router.push("/");
+    } else if (status === "authenticated") {
+      const email = data.user?.email;
+      setPostList(posts.filter((post) => post.userEmail === email));
+    }
+  }, [router, status]);
 
+  // let searchedPost=posts.filter((post)=>post.userEmail===userEmailValue);
   let searchedPost = postList.filter(
     (post) =>
       (post.tags.find((tag) =>
@@ -47,6 +42,11 @@ const Posts = (props: { posts: PostType[] }) => {
         : false) || post.title.toLowerCase().includes(inputValue.toLowerCase())
   );
 
+  if (userEmailValue.length > 0) {
+    searchedPost = searchedPost.filter(
+      (post) => post.userEmail === userEmailValue
+    );
+  }
   return (
     <>
       <Box
@@ -61,16 +61,13 @@ const Posts = (props: { posts: PostType[] }) => {
           gap={4}
           sx={{
             width: "90%",
+            //  border:'1px solid black',
             paddingInline: "1rem",
             margin: "auto",
           }}
         >
           {searchedPost.length > 0 ? (
-            searchedPost.map((post) => (
-              // <Suspense fallback={<h1>Loading post...</h1>}>
-              <Post post={post} key={post.postId} />
-              // </Suspense>
-            ))
+            searchedPost.map((post) => <Post post={post} key={post.postId} />)
           ) : (
             <h1>No Post Found !</h1>
           )}
@@ -80,7 +77,7 @@ const Posts = (props: { posts: PostType[] }) => {
   );
 };
 
-export default Posts;
+export default UserPost;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const response = await fetch("http://localhost:3000/api/posts");

@@ -18,10 +18,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(200).json(posts);
         break;
       case "POST":
-        // console.log('body: ',req.body);
-        const { postId, title, tags, img } = req.body;
+        console.log('body: ',req.body);
+        const { postId, userEmail, title, tags, img } = req.body;
         const newPost = new Post({
           postId,
+          userEmail,
           title,
           tags,
           img,

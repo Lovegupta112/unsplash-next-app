@@ -4,10 +4,14 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
-   postId:{
-      type:String,
-      required:true,
-      unique:true
+  postId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  userEmail: {
+    type: String,
+    required: true,
   },
   title: {
     type: String,

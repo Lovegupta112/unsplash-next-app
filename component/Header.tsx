@@ -9,11 +9,13 @@ import {
   Stack,
 } from "@mui/material";
 import AddPost from "./AddPost";
-import { inputAtom } from "@/pages/posts";
-import { useAtom } from "jotai";
+
+import { useAtom, atom } from "jotai";
 import Link from "next/link";
 import UserDetails from "./UserDetails";
 import BasicTabs from "./BasicTabs";
+
+export const inputAtom = atom("");
 
 const Header = () => {
   const [inputValue, setInputValue] = useAtom(inputAtom);
