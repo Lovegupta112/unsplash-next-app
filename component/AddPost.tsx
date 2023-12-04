@@ -87,7 +87,15 @@ export default function AddPost() {
       }
 
       setPost({ ...post, postId });
-      setPostList([...postList, { ...post, postId, img: imageUrl || "" }]);
+      setPostList([
+        ...postList,
+        {
+          ...post,
+          postId,
+          userEmail: data?.user?.email || "",
+          img: imageUrl || "",
+        },
+      ]);
 
       const response = await fetch("/api/posts", {
         method: "POST",
@@ -103,7 +111,7 @@ export default function AddPost() {
       });
       const createdData = await response.json();
       // console.log("created: ", createdData);
-      alert("Created");
+      alert("Post has Created SuccessFully !");
       setOpen(false);
       // router.replace(router.asPath);
       setPost(defaultPost);

@@ -33,7 +33,7 @@ const Header = () => {
           backgroundColor: " rgb(247, 246, 246)",
         }}
       >
-        <Box className={`${styles.navbar} `}>
+        <Box className={`${styles.navbar}`}>
           <div className={styles["header-logo-search"]}>
             <Link href="/">
               <Image

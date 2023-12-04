@@ -6,36 +6,36 @@ import { PostType } from "@/types/post";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useAtom } from "jotai";
 import { postAtom } from "@/pages/posts";
+import { deleteObject, ref, getStorage } from "firebase/storage";
 
 const Post = ({ post }: { post: PostType }) => {
+  const { postId } = post;
+  const [postList, setPostList] = useAtom(postAtom);
 
-  const {postId}=post;
-  const [postList,setPostList]=useAtom(postAtom);
- 
-
-  const handleClick=async()=>{
-     try{
-      
-      const response=await fetch(`/api/posts/${postId}`,{
-        method:'DELETE'
-      })
-      const res=await response.json();
-      setPostList(postList.filter((post)=>post.postId!==postId));
-      console.log('res: ',res);
-     }
-     catch(error){
-      console.log('Error: ',error);
-     }
-  }
-
+  const handleClick = async () => {
+    try {
+      const response = await fetch(`/api/posts/${postId}`, {
+        method: "DELETE",
+      });
+      setPostList(postList.filter((post) => post.postId !== postId));
+      const res = await response.json();
+      console.log("res: ", res);
+      const storage = getStorage();
+      const deleteRef = ref(storage, post.img);
+      await deleteObject(deleteRef);
+      console.log("Image file deleted successfully ! ");
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  };
 
   return (
     <Box
       sx={{
         minHeight: "300px",
         // flexBasis: "29%",
-         width:'30%',
-         minWidth:'300px',
+        width: "30%",
+        minWidth: "300px",
         "&:hover>div": {
           transform: "scale(1.04)",
         },
@@ -80,10 +80,10 @@ const Post = ({ post }: { post: PostType }) => {
             position: "absolute",
             top: "20px",
             right: "25px",
-            '&:hover':{
+            "&:hover": {
               border: "1px solid red",
-              color:'red'
-            }
+              color: "red",
+            },
           }}
           size="small"
           onClick={handleClick}
@@ -128,7 +128,7 @@ const Post = ({ post }: { post: PostType }) => {
                     "&:hover": {
                       color: "white",
                       borderColor: "white",
-                      backgroundColor:'black'
+                      backgroundColor: "black",
                     },
                   }}
                 >
