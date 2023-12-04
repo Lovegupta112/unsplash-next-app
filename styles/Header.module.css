@@ -1,14 +1,10 @@
-.header {
-  background-color: rgb(247, 246, 246);
-  height: 15vh;
+.navbar {
+  /* background-color: rgb(247, 246, 246); */
   display: flex;
   align-items: center;
-  box-shadow: 1px 1px 10px 3px rgb(215, 214, 214);
   color: rgb(0, 0, 0);
   padding-inline: 1rem;
   justify-content: space-between;
-  position: fixed;
-  width: 100%;
   z-index: 111111;
 }
 
@@ -40,4 +36,8 @@
   background-color: #3db46d;
   padding: 1rem 1.5rem;
   border-radius: 10px;
+}
+
+.userlogo {
+  border-radius: 20px;
 }

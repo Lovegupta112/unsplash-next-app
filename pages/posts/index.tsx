@@ -6,7 +6,9 @@ import Post from "@/component/Post";
 import { PostType } from "@/types/post";
 import { useEffect } from "react";
 import { atom, useAtom, useAtomValue } from "jotai";
+import { useRouter } from "next/router";
 // import { Suspense } from "react";
+import { signIn, useSession } from "next-auth/react";
 
 export const postAtom = atom([
   {
@@ -24,15 +26,17 @@ const Posts = (props: { posts: PostType[] }) => {
 
   const [postList, setPostList] = useAtom(postAtom);
   const inputValue = useAtomValue(inputAtom);
+  const session = useSession();
+  const router = useRouter();
+
+  if (session.status === "unauthenticated") {
+    router.replace("/");
+  }
 
   useEffect(() => {
     setPostList(posts);
   }, []);
 
-  // let searchedPost = postList.filter((post) =>
-  //   post.tags.includes(inputValue) ||
-  //   post.title.toLowerCase().includes(inputValue)
-  // );
   let searchedPost = postList.filter(
     (post) =>
       (post.tags.find((tag) =>
