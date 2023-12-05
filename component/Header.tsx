@@ -34,13 +34,14 @@ const Header = () => {
         }}
       >
         <Box className={`${styles.navbar}`}>
-          <div className={styles["header-logo-search"]}>
+          <Box className={styles["header-logo-search"]}>
             <Link href="/">
               <Image
                 src="/Unsplash_Logo.svg"
                 height={100}
                 width={70}
                 alt="unsplash-logo"
+                priority={false}
               />
             </Link>
             <TextField
@@ -60,7 +61,7 @@ const Header = () => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
-          </div>
+          </Box>
           <Stack direction="row" gap={3}>
             <AddPost />
             <UserDetails />

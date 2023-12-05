@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 // import { Suspense } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { inputAtom } from "@/component/Header";
+import Head from "next/head";
 
 export const postAtom = atom([
   {
@@ -49,6 +50,11 @@ const Posts = (props: { posts: PostType[] }) => {
 
   return (
     <>
+      <Head>
+        <title>All Posts</title>
+        <meta name="description" content="This page contains All Images " />
+        <meta name="keywords" content="images,animals,houses,nature,stylish" />
+      </Head>
       <Box
         className={styles.main}
         sx={{

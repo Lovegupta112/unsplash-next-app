@@ -9,6 +9,7 @@ import { PostType } from "@/types/post";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { inputAtom } from "@/component/Header";
+import Head from "next/head";
 
 export const userEmailAtom = atom("");
 
@@ -49,6 +50,10 @@ const UserPost = (props: { posts: PostType[] }) => {
   }
   return (
     <>
+    <Head>
+      <title>User Post</title>
+      <meta name="description" content="This page contains user's post" />
+    </Head>
       <Box
         className={styles.main}
         sx={{
