@@ -12,14 +12,15 @@ import PostView from "./PostView";
 
 const Post = ({ post }: { post: PostType }) => {
   const { postId } = post;
+
   const [postList, setPostList] = useAtom(postAtom);
   const { data, status } = useSession();
 
   const handleClick = async () => {
-    if (post.userEmail !== data?.user?.email) {
-      alert("Sorry ! You have not permisssion to delete Others post !");
-      return;
-    }
+    // if (post.userEmail !== data?.user?.email) {
+    //   alert("Sorry ! You have not permisssion to delete Others post !");
+    //   return;
+    // }
     try {
       const response = await fetch(`/api/posts/${postId}`, {
         method: "DELETE",
@@ -30,7 +31,7 @@ const Post = ({ post }: { post: PostType }) => {
       const storage = getStorage();
       const deleteRef = ref(storage, post.img);
       await deleteObject(deleteRef);
-      console.log("Image file deleted successfully ! ");
+      console.log("Image file deleted successfully !");
     } catch (error) {
       console.log("Error: ", error);
     }
@@ -58,28 +59,31 @@ const Post = ({ post }: { post: PostType }) => {
         borderRadius: "10px",
       }}
     >
-      <IconButton
-        aria-label="delete"
-        sx={{
-          color: "white",
-          border: "1px solid white",
-          width: "fit-content",
-          visibility: "hidden",
-          alignSelf: "end",
-          position: "absolute",
-          top: "20px",
-          right: "25px",
-          zIndex: "10000",
-          "&:hover": {
-            border: "1px solid red",
-            color: "red",
-          },
-        }}
-        size="small"
-        onClick={handleClick}
-      >
-        <DeleteIcon />
-      </IconButton>
+      {post?.userId?.email === data?.user?.email && (
+        <IconButton
+          aria-label="delete"
+          sx={{
+            color: "white",
+            border: "1px solid white",
+            width: "fit-content",
+            visibility: "hidden",
+            alignSelf: "end",
+            position: "absolute",
+            top: "20px",
+            right: "25px",
+            zIndex: "10000",
+            "&:hover": {
+              border: "1px solid red",
+              color: "red",
+            },
+          }}
+          size="small"
+          onClick={handleClick}
+        >
+          <DeleteIcon />
+        </IconButton>
+      )}
+
       <Stack
         sx={{
           width: "100%",

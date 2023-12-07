@@ -14,15 +14,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // console.log(req.method);
     switch (req.method) {
       case "GET":
-        let posts = await Post.find();
+        let posts = await Post.find().populate("userId");
         res.status(200).json(posts);
         break;
       case "POST":
-        console.log('body: ',req.body);
-        const { postId, userEmail, title, tags, img } = req.body;
+        // console.log("body: ", req.body);
+        const { postId, userId, title, tags, img } = req.body;
         const newPost = new Post({
           postId,
-          userEmail,
+          userId,
           title,
           tags,
           img,

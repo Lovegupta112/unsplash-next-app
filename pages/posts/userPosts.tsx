@@ -29,7 +29,7 @@ const UserPost = (props: { posts: PostType[] }) => {
       router.push("/");
     } else if (status === "authenticated") {
       const email = data.user?.email;
-      setPostList(posts.filter((post) => post.userEmail === email));
+      setPostList(posts.filter((post) => post.userId.email === email));
     }
   }, [router, status]);
 
@@ -45,15 +45,15 @@ const UserPost = (props: { posts: PostType[] }) => {
 
   if (userEmailValue.length > 0) {
     searchedPost = searchedPost.filter(
-      (post) => post.userEmail === userEmailValue
+      (post) => post.userId.email === userEmailValue
     );
   }
   return (
     <>
-    <Head>
-      <title>User Post</title>
-      <meta name="description" content="This page contains user's post" />
-    </Head>
+      <Head>
+        <title>User Post</title>
+        <meta name="description" content="This page contains user's post" />
+      </Head>
       <Box
         className={styles.main}
         sx={{

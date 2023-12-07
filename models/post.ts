@@ -9,9 +9,10 @@ const postSchema = new Schema({
     required: true,
     unique: true,
   },
-  userEmail: {
-    type: String,
-    required: true,
+  userId:{
+   type:Schema.Types.ObjectId,
+    require:true,
+    ref:'User',
   },
   title: {
     type: String,

@@ -11,6 +11,8 @@ import Typography from "@mui/material/Typography";
 import { PostType } from "@/types/post";
 import Image from "next/image";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import EmailIcon from "@mui/icons-material/Email";
+import { useSession } from "next-auth/react";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -24,7 +26,8 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 export default function PostView({ post }: { post: PostType }) {
   const [open, setOpen] = useState(false);
 
-  const { postId, userEmail, title, tags, img } = post;
+  const { postId, userId, title, tags, img } = post;
+  const session = useSession();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -108,25 +111,27 @@ export default function PostView({ post }: { post: PostType }) {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Stack>
+          <Stack padding={1} gap={1}>
             <Typography
               sx={{
-                width: "100%",
-                textAlign: "end",
-                paddingRight: "1rem",
                 fontWeight: "bold",
+                textAlign: "end",
               }}
             >
               Uploaded By
             </Typography>
-            <Stack
-              justifyContent="flex-end"
-              alignItems="center"
-              direction="row"
-              gap={1}
-            >
-              <AccountCircleIcon />
-              {userEmail}
+            <Stack justifyContent="flex-end" alignItems="flex-end" gap={1}>
+              <Stack gap={1} direction="row" alignItems="center">
+                <AccountCircleIcon />
+                <Typography sx={{ color: "grey", textAlign: "end" }}>
+                  {userId.name}
+                  {userId.email === session.data?.user?.email && " (you)"}
+                </Typography>
+              </Stack>
+              <Stack gap={1} direction="row">
+                <EmailIcon />
+                <Typography>{userId.email}</Typography>
+              </Stack>
             </Stack>
           </Stack>
         </DialogActions>

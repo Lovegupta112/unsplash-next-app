@@ -18,7 +18,6 @@ import { useSession } from "next-auth/react";
 
 type PostType = {
   postId: string;
-  userEmail: string;
   title: string;
   tags: string[];
   img: File | undefined;
@@ -26,7 +25,6 @@ type PostType = {
 
 const defaultPost = {
   postId: "",
-  userEmail: "",
   title: "",
   tags: [""],
   img: undefined,
@@ -81,21 +79,22 @@ export default function AddPost() {
       const postId = v4();
       const imageUrl = await uploadImage();
 
-      if (status === "authenticated") {
-        console.log(data.user?.email);
-        setPost({ ...post, userEmail: data.user?.email || "" });
-      }
 
       setPost({ ...post, postId });
+      const userResp=await fetch(`/api/users/${data?.user?.email}`);
+      const userData=await userResp.json();
       setPostList([
         ...postList,
         {
           ...post,
           postId,
-          userEmail: data?.user?.email || "",
           img: imageUrl || "",
+          userId:{...userData}
         },
       ]);
+
+      //  console.log('userData: ',userData,userData._id);
+      
 
       const response = await fetch("/api/posts", {
         method: "POST",
@@ -103,7 +102,7 @@ export default function AddPost() {
           ...post,
           postId,
           img: imageUrl,
-          userEmail: data?.user?.email,
+          userId: userData._id,
         }),
         headers: {
           "Content-Type": "application/json",

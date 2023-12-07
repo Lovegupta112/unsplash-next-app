@@ -15,10 +15,10 @@ import Head from "next/head";
 export const postAtom = atom([
   {
     postId: "",
-    userEmail: "",
     title: "",
     tags: [""],
     img: "",
+    userId: { email: "", name: "" },
   },
 ]);
 
@@ -92,7 +92,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const response = await fetch("http://localhost:3000/api/posts");
   const data = await response.json();
   // context.res.setHeader('Cache-Control','public,s-maxage=10,stale-while-revalidate=59')
-  console.log("todos data: ", data);
   return {
     props: {
       posts: data,
